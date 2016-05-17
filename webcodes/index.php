@@ -31,14 +31,11 @@
 
 	<script>
 	var map;
-	var startPoint = {latitude : 39.47796855, longitude : -0.334134979212601};
-	var endPoint = {latitude : 39.48283465, longitude : -0.343878495106637};
+	var startPoint = {lat : 39.47796855, lon : -0.334134979212601};
+	var endPoint = {lat : 39.48283465, lon : -0.343878495106637};
 	var routeControl;
 
-	var shape = '{{ohjAppjSil@qT_T{Nd}AfQxLtArFt@hC^jGrAr@dFbBlEe@xIkAfGWxAs@nD_TdhA]fBor@jrDWz@kAjGw]djBW`AiBnJa\\bdBGl@qBxJiSteAgHf_@O`A{A~HcAzEW`BMl@gNps@_D~PiCbM_Onx@aGfKgEvRaB`CiCbAiBYcL}ByWqJ}c@sP_T_I]OuEaF]aAm@g@sAS{F?iGaCcG{C]u@m@k@m@Qu@Fe@P}Ic@yBy@bF{WFwC}@mDUiDjAeGvNgu@rAoBvCkN';
-
-
-
+	
 	function mapInit(user_location) {
 
 		//===> Var init
@@ -48,7 +45,7 @@
 
 
 		//===> Map loading
-		map = L.map('map').setView([startPoint['latitude'], startPoint['longitude']], 12);
+		map = L.map('map').setView([startPoint['lat'], startPoint['lon']], 12);
 		var osm = L.tileLayer(tileUrl, {
 			minZoom: 10, 
 			maxZoom: 19,
@@ -57,10 +54,10 @@
 		osm.addTo(map);
 
 		//===> Put marker on start and on end
-		markerStart = L.marker([startPoint['latitude'],startPoint['longitude']]).addTo(map);
+		markerStart = L.marker([startPoint['lat'],startPoint['lon']]).addTo(map);
 		markerStart.bindPopup("Start");  
 
-		markerEnd = L.marker([endPoint['latitude'],endPoint['longitude']]).addTo(map);
+		markerEnd = L.marker([endPoint['lat'],endPoint['lon']]).addTo(map);
 		markerEnd.bindPopup("End");  
 
 
@@ -75,13 +72,16 @@
 
 
 	mapInit();
-	trackMarker(shape);
+	startRoad(startPoint,endPoint);
 
 	function trackMarker(shape){
 		var coords = polylineDecode(shape,6);
 		var i;
 		for(i = 0; i < coords.length; i++)
+		{
+			console.log(coords[i][0],coords[i][1]);
 			L.marker([coords[i][0],coords[i][1]]).addTo(map);
+		}
 
 	}
 
@@ -134,8 +134,36 @@
     return coordinates;
 }
 
+function startRoad(startPoint, endPoint) {
+	var xhttp = new XMLHttpRequest();
+
+	var APIrequest = 'http://valhalla.mapzen.com/route?json={"locations":'
+						+'[{"lat":'+startPoint['lat']+',"lon":'+startPoint['lon']+'},'
+						+'{"lat":'+endPoint['lat']+',"lon":'+endPoint['lon']+'}],'
+						+'"costing":"pedestrian",'
+						+'"directions_options":{"units":"miles"}}'
+						+'&api_key=valhalla-RsYgicy';
+
+	// NOTE : see all the option here : https://mapzen.com/documentation/turn-by-turn/api-reference/
+	// The heading information can be set when we will deploy on the car
+
+	console.log(APIrequest);
+
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			var jsonResponse = JSON.parse(xhttp.responseText);
+			
+			trackMarker(jsonResponse.trip.legs[0].shape);
+		}
+	};
+	xhttp.open("GET", APIrequest, true);
+	xhttp.send();
+} 
+
+
 
 
 	</script>
 
 </html>
+
