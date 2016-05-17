@@ -35,6 +35,10 @@
 	var endPoint = {latitude : 39.48283465, longitude : -0.343878495106637};
 	var routeControl;
 
+	var shape = '{{ohjAppjSil@qT_T{Nd}AfQxLtArFt@hC^jGrAr@dFbBlEe@xIkAfGWxAs@nD_TdhA]fBor@jrDWz@kAjGw]djBW`AiBnJa\\bdBGl@qBxJiSteAgHf_@O`A{A~HcAzEW`BMl@gNps@_D~PiCbM_Onx@aGfKgEvRaB`CiCbAiBYcL}ByWqJ}c@sP_T_I]OuEaF]aAm@g@sAS{F?iGaCcG{C]u@m@k@m@Qu@Fe@P}Ic@yBy@bF{WFwC}@mDUiDjAeGvNgu@rAoBvCkN';
+
+
+
 	function mapInit(user_location) {
 
 		//===> Var init
@@ -59,12 +63,78 @@
 		markerEnd = L.marker([endPoint['latitude'],endPoint['longitude']]).addTo(map);
 		markerEnd.bindPopup("End");  
 
+
+
+
+
+
+
 		return map;
 	}
 
 
 
 	mapInit();
+	trackMarker(shape);
+
+	function trackMarker(shape){
+		var coords = polylineDecode(shape,6);
+		var i;
+		for(i = 0; i < coords.length; i++)
+			L.marker([coords[i][0],coords[i][1]]).addTo(map);
+
+	}
+
+	function polylineDecode(str, precision) {
+    var index = 0,
+        lat = 0,
+        lng = 0,
+        coordinates = [],
+        shift = 0,
+        result = 0,
+        byte = null,
+        latitude_change,
+        longitude_change,
+        factor = Math.pow(10, precision || 5);
+
+    // Coordinates have variable length when encoded, so just keep
+    // track of whether we've hit the end of the string. In each
+    // loop iteration, a single coordinate is decoded.
+    while (index < str.length) {
+
+        // Reset shift, result, and byte
+        byte = null;
+        shift = 0;
+        result = 0;
+
+        do {
+            byte = str.charCodeAt(index++) - 63;
+            result |= (byte & 0x1f) << shift;
+            shift += 5;
+        } while (byte >= 0x20);
+
+        latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+        shift = result = 0;
+
+        do {
+            byte = str.charCodeAt(index++) - 63;
+            result |= (byte & 0x1f) << shift;
+            shift += 5;
+        } while (byte >= 0x20);
+
+        longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+
+        lat += latitude_change;
+        lng += longitude_change;
+
+        coordinates.push([lat / factor, lng / factor]);
+    }
+
+    return coordinates;
+}
+
+
 
 	</script>
 
