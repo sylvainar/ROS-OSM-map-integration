@@ -1,4 +1,9 @@
 <?php
+
+//Implementation of decoding the polyline. Not that useful.
+
+// Credits : https://github.com/dyaaj/polyline-encoder/blob/master/PolylineEncoder.php
+
 function decodeValue($value) {
         $index = 0;
         $points = array();
