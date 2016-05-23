@@ -26,26 +26,18 @@
     console.log('Connection to websocket server closed.');
   });
 
+  // Subscribing to a Topic
+  // ----------------------
 
-  // Calling a service
-  // -----------------
-
-  var addTwoIntsClient = new ROSLIB.Service({
+  var listener = new ROSLIB.Topic({
     ros : ros,
-    name : '/add_two_ints',
-    serviceType : 'rospy_tutorials/AddTwoInts'
+    name : '/gps',
+    messageType : 'sensor_msgs/NavSatFix'
   });
 
-  var request = new ROSLIB.ServiceRequest({
-    a : 1,
-    b : 2
-  });
-
-  addTwoIntsClient.callService(request, function(result) {
-    console.log('Result for service call on '
-      + addTwoIntsClient.name
-      + ': '
-      + result.sum);
+  listener.subscribe(function(message) {
+    console.log('Received message on ' + listener.name + ': ' + message.data);
+    listener.unsubscribe();
   });
 
 </script>
