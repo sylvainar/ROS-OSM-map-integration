@@ -4,6 +4,62 @@
 		"selected_items":
 		[
 			[
+				"Add",
+				"addTwoInts"
+			],
+			[
+				"lat",
+				"latlng"
+			],
+			[
+				"js",
+				"jsonResponse"
+			],
+			[
+				"res",
+				"responseText"
+			],
+			[
+				"x",
+				"xhttp"
+			],
+			[
+				"trac",
+				"trackMarker"
+			],
+			[
+				"st",
+				"startRoad"
+			],
+			[
+				"end",
+				"endPoint"
+			],
+			[
+				"tr",
+				"trackMarker"
+			],
+			[
+				"rou",
+				"routeControl"
+			],
+			[
+				"route",
+				"routeControl"
+			],
+			[
+				"rout",
+				"routeArray"
+			],
+			[
+				"start",
+				"startPoint"
+			],
+			[
+				"star",
+				"startPoint"
+			],
+			[
 				"text-",
 				"text-decoration"
 			],
@@ -308,10 +364,6 @@
 				"type"
 			],
 			[
-				"lat",
-				"latitude"
-			],
-			[
 				"get",
 				"getElementById"
 			],
@@ -376,10 +428,26 @@
 	"buffers":
 	[
 		{
-			"file": "index.php",
+			"file": "scripts.js",
 			"settings":
 			{
-				"buffer_size": 1418,
+				"buffer_size": 3685,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "roslibjstest.html",
+			"settings":
+			{
+				"buffer_size": 1313,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.html",
+			"settings":
+			{
+				"buffer_size": 999,
 				"line_ending": "Unix"
 			}
 		}
@@ -395,6 +463,34 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"ssht",
+				"Set Syntax: HTML"
+			],
+			[
+				"ssphp",
+				"Set Syntax: PHP"
+			],
+			[
+				"ssjav",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ssks",
+				"Set Syntax: Haskell"
+			],
+			[
+				"ssc",
+				"Set Syntax: C"
+			],
+			[
+				"ss py",
+				"Set Syntax: Python"
+			],
+			[
+				"ss php",
+				"Set Syntax: PHP"
+			],
 			[
 				"ssph",
 				"Set Syntax: PHP"
@@ -414,10 +510,6 @@
 			[
 				"ssp",
 				"Set Syntax: Python"
-			],
-			[
-				"ssht",
-				"Set Syntax: HTML (Tcl)"
 			],
 			[
 				"ssC",
@@ -509,10 +601,14 @@
 	[
 		"/var/www/html/Autonomous-Car-GPS-Guiding",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes",
-		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/libs"
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib"
 	],
 	"file_history":
 	[
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/index.php",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/scripts.js",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/apicall.php",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/libs/LRM/leaflet-routing-machine.js",
 		"/var/www/html/codesite/map3.php",
 		"/var/www/html/codesite/index.php",
 		"/var/www/html/codesite/gerant_interface.php",
@@ -584,6 +680,22 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"lng",
+			"lon",
+			"longitud",
+			"latitude",
+			"itude",
+			"start",
+			"preci",
+			"_routes",
+			"addTo",
+			"start",
+			"End",
+			"Start",
+			"start",
+			"Start",
+			"100%",
+			"user_location",
 			"sm",
 			"h5",
 			"md",
@@ -696,31 +808,89 @@
 			[
 				{
 					"buffer": 0,
-					"file": "index.php",
+					"file": "scripts.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1418,
+						"buffer_size": 3685,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1088,
-								1088
+								1437,
+								1521
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 1.0,
-						"translation.y": 270.0,
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "roslibjstest.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1313,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								753,
+								753
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 135.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "index.html",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 999,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -785,7 +955,7 @@
 		[
 			[
 				"",
-				"/var/www/html/codeapi/api.sublime-project"
+				"~/Logiciels/catkin_ws/src/routing_machine/routing_machine.sublime-project"
 			],
 			[
 				"c",

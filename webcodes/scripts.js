@@ -18,10 +18,10 @@ function mapInit() {
 	//===> Put marker on start and on end
 	markerStart = L.marker([startPoint['lat'],startPoint['lon']]).addTo(map);
 	markerStart.bindPopup("Start");  
-
+/*
 	markerEnd = L.marker([endPoint['lat'],endPoint['lon']]).addTo(map);
 	markerEnd.bindPopup("End");  
-
+*/
 	return map;
 }
 
@@ -31,11 +31,13 @@ function trackMarker(shape){
 	// Not useful for implementation, just for display
 	var coords = polylineDecode(shape,6);
 	var i;
-
+	var tempMarker;
 	for(i = 0; i < coords.length; i++)
 	{
-		console.log(coords[i][0],coords[i][1]);
-		L.marker([coords[i][0],coords[i][1]]).addTo(map);
+		coords[i].identification = i;
+		tempMarker = L.marker([coords[i][0],coords[i][1]]).addTo(map);
+		tempMarker.bindPopup("id:"+i);
+
 	}
 
 }
