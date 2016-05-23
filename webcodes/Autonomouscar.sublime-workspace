@@ -439,7 +439,7 @@
 			"file": "roslibjstest.html",
 			"settings":
 			{
-				"buffer_size": 1310,
+				"buffer_size": 1202,
 				"line_ending": "Unix",
 				"name": "roslibjstest.js"
 			}
@@ -448,7 +448,7 @@
 			"file": "roslibjstest.html",
 			"settings":
 			{
-				"buffer_size": 1310,
+				"buffer_size": 1202,
 				"line_ending": "Unix"
 			}
 		},
@@ -456,7 +456,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 999,
+				"buffer_size": 1050,
 				"line_ending": "Unix"
 			}
 		}
@@ -811,7 +811,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -840,7 +840,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -849,27 +849,29 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1310,
+						"buffer_size": 1202,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1191,
-								1191
+								1048,
+								1048
 							]
 						],
 						"settings":
 						{
 							"auto_name": "roslibjstest.js",
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -878,15 +880,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1310,
+						"buffer_size": 1202,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15,
-								15
+								445,
+								445
 							]
 						],
 						"settings":
@@ -896,27 +898,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 135.0,
+						"translation.y": 45.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
 					"file": "index.html",
-					"semi_transient": true,
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 999,
+						"buffer_size": 1050,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								751,
+								751
 							]
 						],
 						"settings":
@@ -924,10 +926,10 @@
 							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 270.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
