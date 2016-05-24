@@ -213,8 +213,8 @@
 .leaflet-bar a:hover {
 	background-color: #fff;
 	border-bottom: 1px solid #ccc;
-	width: 26px;
-	height: 26px;
+	/*width: 26px;
+	height: 26px;*/
 	line-height: 26px;
 	display: block;
 	text-align: center;

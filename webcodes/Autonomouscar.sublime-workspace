@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"set",
+				"setView"
+			],
+			[
 				"l",
 				"latitude"
 			],
@@ -178,10 +182,6 @@
 			[
 				"inf",
 				"inflateMenu"
-			],
-			[
-				"set",
-				"setEventsContainerHeight"
 			],
 			[
 				"e",
@@ -443,15 +443,18 @@
 			"file": "scripts.js",
 			"settings":
 			{
-				"buffer_size": 3378,
+				"buffer_size": 3725,
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "<!DOCTYPE html>\n<html lang=\"fr\">\n	<head>\n		<title>Robotnik panel</title>\n		<meta charset=\"UTF-8\">\n		<!-- Leaflet -->\n		<link rel=\"stylesheet\" href=\"lib/leaflet/leaflet.css\" />\n		<script src=\"lib/leaflet/leaflet.js\"></script>\n\n		<!-- Roscore -->\n		<script type=\"text/javascript\" src=\"lib/roslib/eventemitter2.min.js\"></script>\n		<script type=\"text/javascript\" src=\"lib/roslib/roslib.min.js\"></script>\n\n		<link href=\"bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\">\n\n\n	</head>\n\n	<style>\n				body {\n						padding: 0;\n						margin: 0;\n				}\n				html, body, #map {\n						height: 100%;\n						width: 100%;\n				}\n	</style>\n\n	<body>\n		<div id=\"map\"></div>\n	</body>\n	\n	<!-- Scripts -->\n	<script src=\"bootstrap/js/bootstrap.min.js\"></script>\n	<script src=\"scripts.js\"></script>\n\n</html>\n\n",
 			"file": "index.html",
+			"file_size": 657,
+			"file_write_time": 131085752649814336,
 			"settings":
 			{
-				"buffer_size": 2942,
+				"buffer_size": 779,
 				"line_ending": "Unix"
 			}
 		}
@@ -695,6 +698,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			".png",
 			"End",
 			"position",
 			"currentPosition",
@@ -836,15 +840,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3378,
+						"buffer_size": 3725,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1094,
-								1094
+								3171,
+								3171
 							]
 						],
 						"settings":
@@ -853,7 +857,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 126.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -865,15 +869,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2942,
+						"buffer_size": 779,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1496,
-								1496
+								732,
+								732
 							]
 						],
 						"settings":
@@ -883,7 +887,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 930.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -951,7 +955,7 @@
 		[
 			[
 				"",
-				"~/catkin_ws/src/Routing-ROS-Module/routing_machine.sublime-project"
+				"/var/www/html/codesite/codesite.sublime-project"
 			],
 			[
 				"c",

@@ -8,7 +8,7 @@ function mapInit() {
 
 	//===> Var init
 	var tileUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'; //Tiles service
-	var attrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'; 
+	var attrib = 'Map data © OpenStreetMap contributors'; 
 
 	//===> Map loading
 	map = L.map('map');
@@ -19,6 +19,25 @@ function mapInit() {
 	}); 
 	osm.addTo(map);
 
+	L.easyButton('glyphicon-road', function(btn, map){
+		swal({
+			title: "Where do you want to go ?",
+			text: "After closing this popup, click on the place you want to go.",
+			type: "info",
+			confirmButtonText: "Got it!",
+			showCancelButton: true,
+			closeOnConfirm: true,
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+			},
+			function(isConfirm){
+				if (isConfirm) selectionMode = true;
+				else selectionMode = false;
+			});
+	}).addTo(map);
+
+	markerFinish.addTo(map).setOpacity(0)
+
 	return map;
 }
 
@@ -26,6 +45,7 @@ function mapInit() {
 
 //===> Global variables
 var map;
+var selectionMode;
 var bounds;
 var currentPosition = {latitude : 0, longitude : 0};
 var startPoint;
@@ -38,18 +58,68 @@ var loadedMap = false;
 var i = 0;
 
 //===> ROS connexion
-
 var ros = new ROSLIB.Ros({
 	url : 'ws://localhost:9090'
 });
 
+swal({
+	title: "Connecting to ROS...",
+	showConfirmButton: false,
+	closeOnConfirm: false,
+	showLoaderOnConfirm: true,
+	allowOutsideClick: false,
+	allowEscapeKey: false
+});
+
 ros.on('connection', function() {
 	console.log('Connected to websocket server.');
+	swal({
+		title: "Waiting...",
+		text: "The navigation module can't work without the GPS. Launch the GPS and the module will start automatically.",
+		type: "info",
+		confirmButtonText: "Ok",
+		closeOnConfirm: false,
+		showLoaderOnConfirm: true,
+		allowOutsideClick: false,
+		allowEscapeKey: false
+		},
+		function(){
+			setTimeout(function(){}, 2000);
+	});
 });
 
 ros.on('error', function(error) {
 	console.log('Error connecting to websocket server: ', error);
+	swal({
+		title: "Error connecting the ROS server",
+		text: "Unable to reach ROS server. Is rosbridge launched ?",
+		type: "error",
+		confirmButtonText: "Retry",
+		closeOnConfirm: false,
+		allowOutsideClick: false,
+		allowEscapeKey: false
+		},
+		function(){
+			window.location.reload();
+	});
 });
+
+ros.on('close', function() {
+	console.log("Connexion closed.");
+	swal({
+		title: "Connexion lost",
+		text: "The connexion to the server as been terminated.",
+		type: "error",
+		confirmButtonText: "Retry",
+		closeOnConfirm: false,
+		allowOutsideClick: false,
+		allowEscapeKey: false
+		},
+		function(){
+			window.location.reload();
+	});
+});
+
 
 //===> Init the parameters from ROS Params
 var paramStartLat = new ROSLIB.Param({
@@ -93,20 +163,44 @@ mapInit();
 
 map.on('click', function(e) {
 	//When a click on the map is detected
-
-	//First, get the coordinates of the point clicked
-	var lat = e.latlng.lat;
-	var lon = e.latlng.lng;
-	//Logging stuff in the console
-	console.log('Routing Start !');
-	console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
-	console.log('Destination set to : '+lat + ' ' + lon);
-	//Set all the parameters to the destination
-	paramStartLat.set(currentPosition.latitude);
-	paramStartLon.set(currentPosition.longitude);
-	paramEndLat.set(lat);
-	paramEndLon.set(lon);
-	paramEndGoTo.set(true);// goTo is set to true, that means that their is a new destination to consider.
+	if(selectionMode == true)
+	{
+		selectionMode = false;
+		//First, get the coordinates of the point clicked
+		var lat = e.latlng.lat;
+		var lon = e.latlng.lng;
+		//Place a marker
+		markerFinish.setLatLng([lat,lon]);
+		markerFinish.setOpacity(1);
+		setTimeout(swal({
+			title: "Is this correct ?",
+			text: "Confirm the position to start the navigation.",
+			type: "info",
+			confirmButtonText: "Yes, let's go !",
+			showCancelButton: true,
+			closeOnConfirm: true,
+			allowOutsideClick: false,
+			},
+			function(isConfirm){
+				if (isConfirm)
+				{
+					//Logging stuff in the console
+					console.log('Routing Start !');
+					console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
+					console.log('Destination set to : '+lat + ' ' + lon);
+					//Set all the parameters to the destination
+					paramStartLat.set(currentPosition.latitude);
+					paramStartLon.set(currentPosition.longitude);
+					paramEndLat.set(lat);
+					paramEndLon.set(lon);
+					paramEndGoTo.set(true);// goTo is set to true, that means that their is a new destination to consider.
+				}
+				else
+				{
+					markerFinish.setOpacity(0);
+				}
+			}), 2000);
+	}
 });
 
 
@@ -116,6 +210,7 @@ listenerGPS.subscribe(function(message) {
 	// We have to wait for the GPS before showing the map, because we don't know where we are
 	if(loadedMap == false) 
 	{
+		swal.close();
 		// Center the map on the car's position
 		map.setView([message.latitude, message.longitude], zoomLevel);
 		// Add the marker on the map
