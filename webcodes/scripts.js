@@ -107,8 +107,8 @@ ros.on('error', function(error) {
 ros.on('close', function() {
 	console.log("Connexion closed.");
 	swal({
-		title: "Connexion lost",
-		text: "The connexion to the server as been terminated.",
+		title: "Error connecting the ROS server",
+		text: "Unable to reach ROS server. Is rosbridge launched ?",
 		type: "error",
 		confirmButtonText: "Retry",
 		closeOnConfirm: false,
