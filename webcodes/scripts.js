@@ -1,3 +1,7 @@
+
+// ============================= FUNCTIONS
+
+// ===> mapInit() : init the map
 function mapInit() {
 	// mapInit()
 	// Load the map using the tiles from OpenStreetMap
@@ -18,106 +22,121 @@ function mapInit() {
 	return map;
 }
 
-function trackMarker(shape){
-	// trackMarker(shape)
-	// Giving data from the routing API, this function places a marker on every point of the polygon.
-	// Not useful for implementation, just for display
-	var coords = polylineDecode(shape,6);
-	var i;
-	var tempMarker;
-	for(i = 0; i < coords.length; i++)
+// ============================= SCRIPT
+
+//===> Global variables
+var map;
+var bounds;
+var currentPosition = {latitude : 0, longitude : 0};
+var startPoint;
+var endPoint;
+var markerPosition = L.marker([39,0]);
+var markerFinish = L.marker([0,0]);
+var zoomLevel = 16;
+var routeControl;
+var loadedMap = false;
+var i = 0;
+
+//===> ROS connexion
+
+var ros = new ROSLIB.Ros({
+	url : 'ws://localhost:9090'
+});
+
+ros.on('connection', function() {
+	console.log('Connected to websocket server.');
+});
+
+ros.on('error', function(error) {
+	console.log('Error connecting to websocket server: ', error);
+});
+
+//===> Init the parameters from ROS Params
+var paramStartLat = new ROSLIB.Param({
+	ros : ros,
+	name : '/routing_machine/start/latitude'
+});
+var paramStartLon = new ROSLIB.Param({
+	ros : ros,
+	name : '/routing_machine/start/longitude'
+});
+var paramEndLat = new ROSLIB.Param({
+	ros : ros,
+	name : '/routing_machine/destination/latitude'
+});
+var paramEndLon = new ROSLIB.Param({
+	ros : ros,
+	name : '/routing_machine/destination/longitude'
+});
+var paramEndGoTo = new ROSLIB.Param({
+	ros : ros,
+	name : '/routing_machine/destination/goTo'
+});
+
+paramStartLat.set(0);
+paramStartLon.set(0);	
+paramEndLat.set(0);
+paramEndLon.set(0);
+paramEndGoTo.set(false);
+
+//===> Set the GPS listener, that will move the marker while the car is moving
+var listenerGPS = new ROSLIB.Topic({
+	ros : ros,
+	name : '/gps',
+	messageType : 'sensor_msgs/NavSatFix'
+});
+
+
+//===> Init the map and the click listener
+
+mapInit();
+
+map.on('click', function(e) {
+	//When a click on the map is detected
+
+	//First, get the coordinates of the point clicked
+	var lat = e.latlng.lat;
+	var lon = e.latlng.lng;
+	//Logging stuff in the console
+	console.log('Routing Start !');
+	console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
+	console.log('Destination set to : '+lat + ' ' + lon);
+	//Set all the parameters to the destination
+	paramStartLat.set(currentPosition.latitude);
+	paramStartLon.set(currentPosition.longitude);
+	paramEndLat.set(lat);
+	paramEndLon.set(lon);
+	paramEndGoTo.set(true);// goTo is set to true, that means that their is a new destination to consider.
+});
+
+
+//===> Set the callback function when a message from /gps is received
+
+listenerGPS.subscribe(function(message) {
+	// We have to wait for the GPS before showing the map, because we don't know where we are
+	if(loadedMap == false) 
 	{
-		coords[i].identification = i;
-		tempMarker = L.marker([coords[i][0],coords[i][1]]).addTo(map);
-		tempMarker.bindPopup("id:"+i);
-
+		// Center the map on the car's position
+		map.setView([message.latitude, message.longitude], zoomLevel);
+		// Add the marker on the map
+		markerPosition.addTo(map);
+		// Set the flag to true, so we don't have to load the map again
+		loadedMap = true;
 	}
 
-}
+	// Refresh the global variable with the position
+	currentPosition.latitude = message.latitude;
+	currentPosition.longitude = message.longitude;
 
-
-function polylineDecode(str, precision) {
-	// polylineDecode(str, precision)
-	// When data arrives from the routing API, the polyline is encoded so it reduces the size of the export. 
-	// We have to decode it before using it.
-	// More info : https://developers.google.com/maps/documentation/utilities/polylinealgorithm#example
-	// Did not develop this function myself :
-	// Credits : https://github.com/mapbox/polyline/blob/master/src/polyline.js
-
-	var index = 0,
-	lat = 0,
-	lng = 0,
-	coordinates = [],
-	shift = 0,
-	result = 0,
-	byte = null,
-	latitude_change,
-	longitude_change,
-	factor = Math.pow(10, precision || 5);
-
-	// Coordinates have variable length when encoded, so just keep
-	// track of whether we've hit the end of the string. In each
-	// loop iteration, a single coordinate is decoded.
-	while (index < str.length) {
-
-		// Reset shift, result, and byte
-		byte = null;
-		shift = 0;
-		result = 0;
-
-		do {
-			byte = str.charCodeAt(index++) - 63;
-			result |= (byte & 0x1f) << shift;
-			shift += 5;
-		} while (byte >= 0x20);
-
-		latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
-
-		shift = result = 0;
-
-		do {
-			byte = str.charCodeAt(index++) - 63;
-			result |= (byte & 0x1f) << shift;
-			shift += 5;
-		} while (byte >= 0x20);
-
-		longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
-
-		lat += latitude_change;
-		lng += longitude_change;
-
-		coordinates.push([lat / factor, lng / factor]);
+	if(i%20 == 0) // No need to move the marker everytime
+	{
+		// Refresh the position of the marker on the map
+		markerPosition.setLatLng([message.latitude, message.longitude]);
+		// If the marker has went out of the map, we move the map
+		bounds = map.getBounds();
+		if(!bounds.contains([message.latitude, message.longitude]))
+			map.setView([message.latitude, message.longitude], zoomLevel);
 	}
-
-	return coordinates;
-}
-
-function startRoad(startPoint, endPoint) {
-	// startRoad(startPoint, endPoint)
-	// Give this function the coordinates, it will make the API calls to calculate the routing, then decode it.
-
-	var xhttp = new XMLHttpRequest();
-
-	var APIrequest = 'http://valhalla.mapzen.com/route?json={"locations":'
-						+'[{"lat":'+startPoint['lat']+',"lon":'+startPoint['lon']+'},'
-						+'{"lat":'+endPoint['lat']+',"lon":'+endPoint['lon']+'}],'
-						+'"costing":"pedestrian",'
-						+'"directions_options":{"units":"miles"}}'
-						+'&api_key=valhalla-RsYgicy';
-
-	// NOTE : see all the option here : https://mapzen.com/documentation/turn-by-turn/api-reference/
-	// The heading information can be set when we will deploy on the car
-
-	console.log(APIrequest);
-
-	// AJAX call to the API
-	xhttp.onreadystatechange = function() {
-		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			var jsonResponse = JSON.parse(xhttp.responseText);
-			
-			trackMarker(jsonResponse.trip.legs[0].shape);
-		}
-	};
-	xhttp.open("GET", APIrequest, true);
-	xhttp.send();
-}
+	
+	i++;
+});
