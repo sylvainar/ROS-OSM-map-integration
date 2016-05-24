@@ -33,12 +33,13 @@
 	<script>
 	//===> Global variables
 	var map;
+	var bounds;
 	var currentPosition = {latitude : 0, longitude : 0};
 	var startPoint;
 	var endPoint;
 	var markerPosition = L.marker([39,0]);
 	var markerFinish = L.marker([0,0]);
-
+	var zoomLevel = 16;
 	var routeControl;
 	var loadedMap = false;
 
@@ -114,18 +115,30 @@
 		messageType : 'sensor_msgs/NavSatFix'
 	});
 
+	var i = 0;
+
 	listenerGPS.subscribe(function(message) {
 				
 		if(loadedMap == false) 
 		{
-			map.setView([message.latitude, message.longitude], 16)
+			map.setView([message.latitude, message.longitude], zoomLevel);
 			markerPosition.addTo(map);
 			loadedMap = true;
 		}
 		currentPosition.latitude = message.latitude;
 		currentPosition.longitude = message.longitude;
 
-		markerPosition.setLatLng([message.latitude, message.longitude]);
+		if(i%20 == 0) // No need to move the marker everytime
+		{
+			console.log(i);
+			markerPosition.setLatLng([message.latitude, message.longitude]);
+			bounds = map.getBounds();
+
+			if(!bounds.contains([message.latitude, message.longitude]))
+				map.setView([message.latitude, message.longitude], zoomLevel);
+
+		}
+		i++;
 	 });
 
 	</script>
