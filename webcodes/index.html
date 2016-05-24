@@ -15,14 +15,14 @@
 	</head>
 
 	<style>
-        body {
-            padding: 0;
-            margin: 0;
-        }
-        html, body, #map {
-            height: 100%;
-            width: 100%;
-        }
+				body {
+						padding: 0;
+						margin: 0;
+				}
+				html, body, #map {
+						height: 100%;
+						width: 100%;
+				}
 	</style>
 
 	<body>
@@ -32,62 +32,69 @@
 	<script>
 
 	// Connecting to ROS
-  // -----------------
+	// -----------------
 
-  var ros = new ROSLIB.Ros({
-    url : 'ws://localhost:9090'
-  });
+	var ros = new ROSLIB.Ros({
+		url : 'ws://localhost:9090'
+	});
 
-  ros.on('connection', function() {
-    console.log('Connected to websocket server.');
-  });
+	ros.on('connection', function() {
+		console.log('Connected to websocket server.');
+	});
 
-  ros.on('error', function(error) {
-    console.log('Error connecting to websocket server: ', error);
-  });
+	ros.on('error', function(error) {
+		console.log('Error connecting to websocket server: ', error);
+	});
 
-  ros.on('close', function() {
-    console.log('Connection to websocket server closed.');
-  });
-
-
-  });
+	ros.on('close', function() {
+		console.log('Connection to websocket server closed.');
+	});
 
 	//===> Global variables
 	var map;
-	var startPoint = {lat : 39.4783618733, lon : -0.335404928529};
-	var endPoint = {lat : 39.48283465, lon : -0.343878495106637};
-	var markerPosition = L.marker([39,0]).addTo(map);
-	var routeControl;
-
-
-
-	//===> Program start (refer to scripts.js)
-	mapInit();
-
-	map.on('click', function(e) {
-	    var lat = e.latlng.lat;
-	    var lon = e.latlng.lng;
-
-	    endPoint.lat = lat;
-	    endPoint.lon = lon;
-	    startRoad(startPoint,endPoint);
+	var startPoint;
+	var endPoint;
+	var markerPosition = L.marker([39,0]);
+	var markerFinish = L.marker([0,0]);
+	ros.getParams(function(params) {
+		console.log(params);
 	});
+	var currentPosition;
+	var routeControl;
+	var loadedMap = false;
+
+	var endPositionParam = new ROSLIB.Param({
+		ros : ros,
+		name : '/routing_machine/destination/'
+	});
+	endPositionParam.set('{latitude:0, longitude: 0, toGo: false}');
 
 	
- // Subscribing to a Topic
-  // ----------------------
+ 	// Subscribing to a Topic
+	// ----------------------
 
-  var listener = new ROSLIB.Topic({
-    ros : ros,
-    name : '/gps',
-    messageType : 'sensor_msgs/NavSatFix'
-  });
+	var listener = new ROSLIB.Topic({
+		ros : ros,
+		name : '/gps',
+		messageType : 'sensor_msgs/NavSatFix'
+	});
 
-  listener.subscribe(function(message) {
-    console.log('Received message on ' + listener.name + ': ' + message.data);
-    markerPosition.setLongLat([message.latitude, message.longitude]);
-   });
+	listener.subscribe(function(message) {
+		if(loadedMap == false) 
+		{
+			mapInit(message.latitude, message.longitude);
+			markerPosition.addTo(map);
+			map.on('click', function(e) {
+				var lat = e.latlng.lat;
+				var lon = e.latlng.lng;
+				console.log('Destination set to : '+lat + ' ' + lon);
+				endPositionParam.set('{latitude:'+lat+', longitude: '+lon+', toGo: true}');
+			});
+			loadedMap = true;
+		}
+		
+		markerPosition.setLatLng([message.latitude, message.longitude]);
+	 });
 
 	</script>
 

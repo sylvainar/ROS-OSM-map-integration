@@ -1,4 +1,4 @@
-function mapInit() {
+function mapInit(startLat, startLon) {
 	// mapInit()
 	// Load the map using the tiles from OpenStreetMap
 
@@ -7,7 +7,7 @@ function mapInit() {
 	var attrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'; 
 
 	//===> Map loading
-	map = L.map('map').setView([startPoint['lat'], startPoint['lon']], 12);
+	map = L.map('map').setView([startLat, startLon], 16);
 	var osm = L.tileLayer(tileUrl, {
 		minZoom: 10, 
 		maxZoom: 19,
@@ -15,13 +15,6 @@ function mapInit() {
 	}); 
 	osm.addTo(map);
 
-	//===> Put marker on start and on end
-	markerStart = L.marker([startPoint['lat'],startPoint['lon']]).addTo(map);
-	markerStart.bindPopup("Start");  
-/*
-	markerEnd = L.marker([endPoint['lat'],endPoint['lon']]).addTo(map);
-	markerEnd.bindPopup("End");  
-*/
 	return map;
 }
 
