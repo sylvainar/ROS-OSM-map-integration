@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 	<head>
-		<title>Autonomous Car</title>
+		<title>Robotnik panel</title>
+		<meta charset="UTF-8">
 		<!-- Leaflet -->
 		<link rel="stylesheet" href="lib/leaflet/leaflet.css" />
 		<script src="lib/leaflet/leaflet.js"></script>
@@ -30,6 +31,16 @@
 	</body>
 
 	<script>
+	//===> Global variables
+	var map;
+	var currentPosition = {latitude : 0, longitude : 0};
+	var startPoint;
+	var endPoint;
+	var markerPosition = L.marker([39,0]);
+	var markerFinish = L.marker([0,0]);
+
+	var routeControl;
+	var loadedMap = false;
 
 	// Connecting to ROS
 	// -----------------
@@ -50,16 +61,7 @@
 		console.log('Connection to websocket server closed.');
 	});
 
-	//===> Global variables
-	var map;
-	var startPoint;
-	var endPoint;
-	var markerPosition = L.marker([39,0]);
-	var markerFinish = L.marker([0,0]);
 
-	var currentPosition;
-	var routeControl;
-	var loadedMap = false;
 
 	var paramStartLat = new ROSLIB.Param({
 		ros : ros,
@@ -67,7 +69,7 @@
 	});
 	var paramStartLon = new ROSLIB.Param({
 		ros : ros,
-		name : '/routing_machine/start/latitude'
+		name : '/routing_machine/start/longitude'
 	});
 	var paramEndLat = new ROSLIB.Param({
 		ros : ros,
@@ -81,7 +83,9 @@
 		ros : ros,
 		name : '/routing_machine/destination/goTo'
 	});
-	
+
+	paramStartLat.set(0);
+	paramStartLon.set(0);	
 	paramEndLat.set(0);
 	paramEndLon.set(0);
 	paramEndGoTo.set(false);
@@ -90,9 +94,12 @@
 	map.on('click', function(e) {
 		var lat = e.latlng.lat;
 		var lon = e.latlng.lng;
-		
+		console.log('Routing Start !');
+		console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
 		console.log('Destination set to : '+lat + ' ' + lon);
 
+		paramStartLat.set(currentPosition.latitude);
+		paramStartLon.set(currentPosition.longitude);
 		paramEndLat.set(lat);
 		paramEndLon.set(lon);
 		paramEndGoTo.set(true);
@@ -113,10 +120,11 @@
 		{
 			map.setView([message.latitude, message.longitude], 16)
 			markerPosition.addTo(map);
-
 			loadedMap = true;
 		}
-		
+		currentPosition.latitude = message.latitude;
+		currentPosition.longitude = message.longitude;
+
 		markerPosition.setLatLng([message.latitude, message.longitude]);
 	 });
 

@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"l",
+				"latitude"
+			],
+			[
+				"lo",
+				"longitude"
+			],
+			[
 				"lat",
 				"latitude"
 			],
@@ -210,10 +218,6 @@
 			[
 				"for",
 				"formatePopup"
-			],
-			[
-				"lo",
-				"log"
 			],
 			[
 				"user",
@@ -439,7 +443,7 @@
 			"file": "scripts.js",
 			"settings":
 			{
-				"buffer_size": 3430,
+				"buffer_size": 3378,
 				"line_ending": "Unix"
 			}
 		},
@@ -447,7 +451,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 2837,
+				"buffer_size": 2942,
 				"line_ending": "Unix"
 			}
 		}
@@ -459,10 +463,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
-		"last_filter": "",
+		"height": 138.0,
+		"last_filter": "ssjs",
 		"selected_items":
 		[
+			[
+				"ssjs",
+				"Set Syntax: JavaScript"
+			],
 			[
 				"ssht",
 				"Set Syntax: HTML"
@@ -600,10 +608,17 @@
 	"expanded_folders":
 	[
 		"/var/www/html/Autonomous-Car-GPS-Guiding",
-		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes"
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/leaflet",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/roslib"
 	],
 	"file_history":
 	[
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/roslib/roslib.min.js",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/roslib/eventemitter2.min.js",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/leaflet/leaflet.css",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/leaflet/leaflet.js",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/roslibjstest.html",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/index.php",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/scripts.js",
@@ -680,6 +695,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"End",
+			"position",
+			"currentPosition",
+			"lat",
+			"current",
 			"End",
 			"message",
 			"destination",
@@ -816,15 +836,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3430,
+						"buffer_size": 3378,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								365,
-								365
+								1094,
+								1094
 							]
 						],
 						"settings":
@@ -833,7 +853,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 90.0,
+						"translation.y": 126.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -845,15 +865,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2837,
+						"buffer_size": 2942,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2610,
-								2610
+								1496,
+								1496
 							]
 						],
 						"settings":
@@ -863,7 +883,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1351.0,
+						"translation.y": 930.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
