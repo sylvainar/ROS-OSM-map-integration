@@ -172,34 +172,35 @@ map.on('click', function(e) {
 		//Place a marker
 		markerFinish.setLatLng([lat,lon]);
 		markerFinish.setOpacity(1);
-		setTimeout(swal({
-			title: "Is this correct ?",
-			text: "Confirm the position to start the navigation.",
-			type: "info",
-			confirmButtonText: "Yes, let's go !",
-			showCancelButton: true,
-			closeOnConfirm: true,
-			allowOutsideClick: false,
-			},
-			function(isConfirm){
-				if (isConfirm)
-				{
-					//Logging stuff in the console
-					console.log('Routing Start !');
-					console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
-					console.log('Destination set to : '+lat + ' ' + lon);
-					//Set all the parameters to the destination
-					paramStartLat.set(currentPosition.latitude);
-					paramStartLon.set(currentPosition.longitude);
-					paramEndLat.set(lat);
-					paramEndLon.set(lon);
-					paramEndGoTo.set(true);// goTo is set to true, that means that their is a new destination to consider.
-				}
-				else
-				{
-					markerFinish.setOpacity(0);
-				}
-			}), 2000);
+		setTimeout(function() {
+			swal({
+				title: "Is this correct ?",
+				text: "Confirm the position to start the navigation.",
+				type: "info",
+				confirmButtonText: "Yes, let's go !",
+				showCancelButton: true,
+				closeOnConfirm: true,
+				allowOutsideClick: false,
+				},
+				function(isConfirm){
+					if (isConfirm)
+					{
+						//Logging stuff in the console
+						console.log('Routing Start !');
+						console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
+						console.log('Destination set to : '+lat + ' ' + lon);
+						//Set all the parameters to the destination
+						paramStartLat.set(currentPosition.latitude);
+						paramStartLon.set(currentPosition.longitude);
+						paramEndLat.set(lat);
+						paramEndLon.set(lon);
+						paramEndGoTo.set(true);// goTo is set to true, that means that their is a new destination to consider.
+					}
+					else
+					{
+						markerFinish.setOpacity(0);
+					}
+			})}, 1000);
 	}
 });
 
