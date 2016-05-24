@@ -1,4 +1,4 @@
-function mapInit(startLat, startLon) {
+function mapInit() {
 	// mapInit()
 	// Load the map using the tiles from OpenStreetMap
 
@@ -7,7 +7,7 @@ function mapInit(startLat, startLon) {
 	var attrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'; 
 
 	//===> Map loading
-	map = L.map('map').setView([startLat, startLon], 16);
+	map = L.map('map');
 	var osm = L.tileLayer(tileUrl, {
 		minZoom: 10, 
 		maxZoom: 19,

@@ -3,12 +3,12 @@
 	<head>
 		<title>Autonomous Car</title>
 		<!-- Leaflet -->
-		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-		<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+		<link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+		<script src="lib/leaflet/leaflet.js"></script>
 
 		<!-- Roscore -->
-		<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
-		<script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+		<script type="text/javascript" src="lib/roslib/eventemitter2.min.js"></script>
+		<script type="text/javascript" src="lib/roslib/roslib.min.js"></script>
 		<!-- Scripts -->
 		<script src="scripts.js"></script>
 
@@ -56,40 +56,64 @@
 	var endPoint;
 	var markerPosition = L.marker([39,0]);
 	var markerFinish = L.marker([0,0]);
-	ros.getParams(function(params) {
-		console.log(params);
-	});
+
 	var currentPosition;
 	var routeControl;
 	var loadedMap = false;
 
-	var endPositionParam = new ROSLIB.Param({
+	var paramStartLat = new ROSLIB.Param({
 		ros : ros,
-		name : '/routing_machine/destination/'
+		name : '/routing_machine/start/latitude'
 	});
-	endPositionParam.set('{latitude:0, longitude: 0, toGo: false}');
+	var paramStartLon = new ROSLIB.Param({
+		ros : ros,
+		name : '/routing_machine/start/latitude'
+	});
+	var paramEndLat = new ROSLIB.Param({
+		ros : ros,
+		name : '/routing_machine/destination/latitude'
+	});
+	var paramEndLon = new ROSLIB.Param({
+		ros : ros,
+		name : '/routing_machine/destination/longitude'
+	});
+	var paramEndGoTo = new ROSLIB.Param({
+		ros : ros,
+		name : '/routing_machine/destination/goTo'
+	});
+	
+	paramEndLat.set(0);
+	paramEndLon.set(0);
+	paramEndGoTo.set(false);
 
+	mapInit();
+	map.on('click', function(e) {
+		var lat = e.latlng.lat;
+		var lon = e.latlng.lng;
+		
+		console.log('Destination set to : '+lat + ' ' + lon);
+
+		paramEndLat.set(lat);
+		paramEndLon.set(lon);
+		paramEndGoTo.set(true);
+	});
 	
  	// Subscribing to a Topic
 	// ----------------------
 
-	var listener = new ROSLIB.Topic({
+	var listenerGPS = new ROSLIB.Topic({
 		ros : ros,
 		name : '/gps',
 		messageType : 'sensor_msgs/NavSatFix'
 	});
 
-	listener.subscribe(function(message) {
+	listenerGPS.subscribe(function(message) {
+				
 		if(loadedMap == false) 
 		{
-			mapInit(message.latitude, message.longitude);
+			map.setView([message.latitude, message.longitude], 16)
 			markerPosition.addTo(map);
-			map.on('click', function(e) {
-				var lat = e.latlng.lat;
-				var lon = e.latlng.lng;
-				console.log('Destination set to : '+lat + ' ' + lon);
-				endPositionParam.set('{latitude:'+lat+', longitude: '+lon+', toGo: true}');
-			});
+
 			loadedMap = true;
 		}
 		

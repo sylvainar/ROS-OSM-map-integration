@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"lat",
+				"latitude"
+			],
+			[
+				"curr",
+				"currentPosition"
+			],
+			[
 				"rout",
 				"routing_machine"
 			],
@@ -18,10 +26,6 @@
 			[
 				"star",
 				"startLat"
-			],
-			[
-				"lat",
-				"latitude"
 			],
 			[
 				"marker",
@@ -440,21 +444,10 @@
 			}
 		},
 		{
-			"file": "roslibjstest.html",
-			"settings":
-			{
-				"buffer_size": 1174,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "<!DOCTYPE html>\n<html lang=\"fr\">\n	<head>\n		<title>Autonomous Car</title>\n		<!-- Leaflet -->\n		<link rel=\"stylesheet\" href=\"http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css\" />\n		<script src=\"http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js\"></script>\n\n		<!-- Roscore -->\n		<script type=\"text/javascript\" src=\"http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js\"></script>\n		<script type=\"text/javascript\" src=\"http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js\"></script>\n		<!-- Scripts -->\n		<script src=\"scripts.js\"></script>\n\n	</head>\n\n	<style>\n				body {\n						padding: 0;\n						margin: 0;\n				}\n				html, body, #map {\n						height: 100%;\n						width: 100%;\n				}\n	</style>\n\n	<body>\n		<div id=\"map\"></div>\n	</body>\n\n	<script>\n\n	// Connecting to ROS\n	// -----------------\n\n	var ros = new ROSLIB.Ros({\n		url : 'ws://localhost:9090'\n	});\n\n	ros.on('connection', function() {\n		console.log('Connected to websocket server.');\n	});\n\n	ros.on('error', function(error) {\n		console.log('Error connecting to websocket server: ', error);\n	});\n\n	ros.on('close', function() {\n		console.log('Connection to websocket server closed.');\n	});\n\n	//===> Global variables\n	var map;\n	var startPoint;\n	var endPoint;\n	var markerPosition = L.marker([39,0]);\n	var markerFinish = L.marker([0,0]);\n\n	var currentPosition;\n	var routeControl;\n	var loadedMap = false;\n\n	var endPositionParam = new ROSLIB.Param({\n		ros : ros,\n		name : '/routing_machine/destination/'\n	});\n	\n	endPositionParam.set('{latitude:0, longitude: 0, toGo: false}');\n\n	\n 	// Subscribing to a Topic\n	// ----------------------\n\n	var listener = new ROSLIB.Topic({\n		ros : ros,\n		name : '/gps',\n		messageType : 'sensor_msgs/NavSatFix'\n	});\n\n	listener.subscribe(function(message) {\n		if(loadedMap == false) \n		{\n			mapInit(message.latitude, message.longitude);\n			markerPosition.addTo(map);\n			map.on('click', function(e) {\n				var lat = e.latlng.lat;\n				var lon = e.latlng.lng;\n				console.log('Destination set to : '+lat + ' ' + lon);\n				endPositionParam.set('{latitude:'+lat+', longitude: '+lon+', toGo: true}');\n			});\n			loadedMap = true;\n		}\n		\n		markerPosition.setLatLng([message.latitude, message.longitude]);\n	 });\n\n	</script>\n\n</html>\n\n",
 			"file": "index.html",
-			"file_size": 2276,
-			"file_write_time": 131084952341604698,
 			"settings":
 			{
-				"buffer_size": 2217,
+				"buffer_size": 2837,
 				"line_ending": "Unix"
 			}
 		}
@@ -687,6 +680,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"End",
+			"message",
+			"destination",
+			"End",
 			"lng",
 			"lon",
 			"longitud",
@@ -810,7 +807,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -836,57 +833,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "roslibjstest.html",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1174,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								55,
-								55
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 90.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "index.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2217,
+						"buffer_size": 2837,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1474,
-								1474
+								2610,
+								2610
 							]
 						],
 						"settings":
@@ -896,7 +863,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 990.0,
+						"translation.y": 1351.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -964,7 +931,7 @@
 		[
 			[
 				"",
-				"~/Logiciels/catkin_ws/src/routing_machine/routing_machine.sublime-workspace"
+				"~/catkin_ws/src/Routing-ROS-Module/routing_machine.sublime-project"
 			],
 			[
 				"c",
