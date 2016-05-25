@@ -4,12 +4,48 @@
 		"selected_items":
 		[
 			[
-				"Add",
-				"addTwoInts"
+				"set",
+				"setView"
+			],
+			[
+				"l",
+				"latitude"
+			],
+			[
+				"lo",
+				"longitude"
 			],
 			[
 				"lat",
-				"latlng"
+				"latitude"
+			],
+			[
+				"curr",
+				"currentPosition"
+			],
+			[
+				"rout",
+				"routing_machine"
+			],
+			[
+				"mark",
+				"markerFinish"
+			],
+			[
+				"en",
+				"endPositionParam"
+			],
+			[
+				"star",
+				"startLat"
+			],
+			[
+				"marker",
+				"markerPosition"
+			],
+			[
+				"Add",
+				"addTwoInts"
 			],
 			[
 				"js",
@@ -48,15 +84,7 @@
 				"routeControl"
 			],
 			[
-				"rout",
-				"routeArray"
-			],
-			[
 				"start",
-				"startPoint"
-			],
-			[
-				"star",
 				"startPoint"
 			],
 			[
@@ -156,10 +184,6 @@
 				"inflateMenu"
 			],
 			[
-				"set",
-				"setEventsContainerHeight"
-			],
-			[
 				"e",
 				"eventsContainer"
 			],
@@ -196,16 +220,8 @@
 				"formatePopup"
 			],
 			[
-				"lo",
-				"log"
-			],
-			[
 				"user",
 				"user_location"
-			],
-			[
-				"en",
-				"event"
 			],
 			[
 				"map",
@@ -320,10 +336,6 @@
 				"etab_list"
 			],
 			[
-				"mark",
-				"marker_list"
-			],
-			[
 				"rep",
 				"rep_coord"
 			],
@@ -431,23 +443,18 @@
 			"file": "scripts.js",
 			"settings":
 			{
-				"buffer_size": 3685,
+				"buffer_size": 3725,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "roslibjstest.html",
-			"settings":
-			{
-				"buffer_size": 1313,
-				"line_ending": "Unix"
-			}
-		},
-		{
+			"contents": "<!DOCTYPE html>\n<html lang=\"fr\">\n	<head>\n		<title>Robotnik panel</title>\n		<meta charset=\"UTF-8\">\n		<!-- Leaflet -->\n		<link rel=\"stylesheet\" href=\"lib/leaflet/leaflet.css\" />\n		<script src=\"lib/leaflet/leaflet.js\"></script>\n\n		<!-- Roscore -->\n		<script type=\"text/javascript\" src=\"lib/roslib/eventemitter2.min.js\"></script>\n		<script type=\"text/javascript\" src=\"lib/roslib/roslib.min.js\"></script>\n\n		<link href=\"bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\">\n\n\n	</head>\n\n	<style>\n				body {\n						padding: 0;\n						margin: 0;\n				}\n				html, body, #map {\n						height: 100%;\n						width: 100%;\n				}\n	</style>\n\n	<body>\n		<div id=\"map\"></div>\n	</body>\n	\n	<!-- Scripts -->\n	<script src=\"bootstrap/js/bootstrap.min.js\"></script>\n	<script src=\"scripts.js\"></script>\n\n</html>\n\n",
 			"file": "index.html",
+			"file_size": 657,
+			"file_write_time": 131085752649814336,
 			"settings":
 			{
-				"buffer_size": 999,
+				"buffer_size": 779,
 				"line_ending": "Unix"
 			}
 		}
@@ -459,10 +466,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
-		"last_filter": "",
+		"height": 138.0,
+		"last_filter": "ssjs",
 		"selected_items":
 		[
+			[
+				"ssjs",
+				"Set Syntax: JavaScript"
+			],
 			[
 				"ssht",
 				"Set Syntax: HTML"
@@ -601,10 +612,17 @@
 	[
 		"/var/www/html/Autonomous-Car-GPS-Guiding",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes",
-		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib"
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/leaflet",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/roslib"
 	],
 	"file_history":
 	[
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/roslib/roslib.min.js",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/roslib/eventemitter2.min.js",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/leaflet/leaflet.css",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/lib/leaflet/leaflet.js",
+		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/roslibjstest.html",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/index.php",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/webcodes/scripts.js",
 		"/var/www/html/Autonomous-Car-GPS-Guiding/apicall.php",
@@ -680,6 +698,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			".png",
+			"End",
+			"position",
+			"currentPosition",
+			"lat",
+			"current",
+			"End",
+			"message",
+			"destination",
+			"End",
 			"lng",
 			"lon",
 			"longitud",
@@ -803,7 +831,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -812,15 +840,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3685,
+						"buffer_size": 3725,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1437,
-								1521
+								3171,
+								3171
 							]
 						],
 						"settings":
@@ -832,65 +860,37 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "roslibjstest.html",
+					"file": "index.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1313,
+						"buffer_size": 779,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								753,
-								753
+								732,
+								732
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 135.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "index.html",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 999,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -955,7 +955,7 @@
 		[
 			[
 				"",
-				"~/Logiciels/catkin_ws/src/routing_machine/routing_machine.sublime-project"
+				"/var/www/html/codesite/codesite.sublime-project"
 			],
 			[
 				"c",
