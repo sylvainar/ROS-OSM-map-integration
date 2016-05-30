@@ -7,14 +7,22 @@ function mapInit() {
 	// Load the map using the tiles from OpenStreetMap
 
 	//===> Var init
-	var tileUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png'; //Tiles service
+
+	// HERE WE GO TWO POSSIBILITIES
+	// Download the map online, directly from the OSM server
+	//var tileUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+
+	// Or use the tiles we've downloaded
+	var tileUrl = 'UPV/{z}/{x}/{y}.png';
+
+
 	var attrib = 'Map data © OpenStreetMap contributors'; 
 
 	//===> Map loading
 	map = L.map('map');
 	var osm = L.tileLayer(tileUrl, {
-		minZoom: 10, 
-		maxZoom: 19,
+		minZoom: 12, 
+		maxZoom: 18,
 		attribution: attrib
 	}); 
 	osm.addTo(map);
@@ -209,11 +217,14 @@ map.on('click', function(e) {
 
 listenerGPS.subscribe(function(message) {
 	// We have to wait for the GPS before showing the map, because we don't know where we are
+	var lat = message.latitude;
+	var lon = message.longitude;
+
 	if(loadedMap == false) 
 	{
 		swal.close();
 		// Center the map on the car's position
-		map.setView([message.latitude, message.longitude], zoomLevel);
+		map.setView([lat, lon], zoomLevel);
 		// Add the marker on the map
 		markerPosition.addTo(map);
 		// Set the flag to true, so we don't have to load the map again
@@ -221,17 +232,17 @@ listenerGPS.subscribe(function(message) {
 	}
 
 	// Refresh the global variable with the position
-	currentPosition.latitude = message.latitude;
-	currentPosition.longitude = message.longitude;
+	currentPosition.latitude = lat;
+	currentPosition.longitude = lon;
 
 	if(i%20 == 0) // No need to move the marker everytime
 	{
 		// Refresh the position of the marker on the map
-		markerPosition.setLatLng([message.latitude, message.longitude]);
+		markerPosition.setLatLng([lat, lon]);
 		// If the marker has went out of the map, we move the map
 		bounds = map.getBounds();
-		if(!bounds.contains([message.latitude, message.longitude]))
-			map.setView([message.latitude, message.longitude], zoomLevel);
+		if(!bounds.contains([lat, lon]))
+			map.setView([lat, lon], zoomLevel);
 	}
 	
 	i++;
