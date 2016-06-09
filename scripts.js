@@ -1,21 +1,51 @@
+// ============================= INTRODUCTION
+
+// Name : Autonomous-Car-GPS-Guiding
+// Author : Sylvain ARNOUTS
+// Mail : sylvain.ar@hotmail.fr
+// Date : From May to August 2016
+// Link : https://github.com/sylvainar/Autonomous-Car-GPS-Guiding
+
+// This code has been written in order to create a nice interface to interact
+// with the autonomous electric car of the UPV ai2 laboratory. It displays a map,
+// set a marker on the car's position using gps publishing topic, and allows a user 
+// to start the routing by tapping the destination on the touchscreen.
+
+// License : Apache 2.0
+
+// ============================= CONFIGURATION
+
+// The name of the GPS publisher name by default
+var CONFIG_default_gps_topic_name = '/gps';
+
+// We can download the map online on OSM server, but
+// it won't work if the car isn't connected to the internet.
+// If you downloaded tiles and put it in the car, then you can
+// access them in local, or else, connect to server.
+// Set this config to "local" or "server".
+var CONFIG_tile_source = 'local';
+
+// If you use local tiles, set here the path to it
+var CONFIG_tile_local_path = 'UPV/{z}/{x}/{y}.png';
+
+// Network address to ROS server (it can be localhost or an IP)
+var CONFIG_ROS_server_URI = 'localhost';
+
 
 // ============================= FUNCTIONS
 
 // ===> mapInit() : init the map
 function mapInit() {
-	// mapInit()
-	// Load the map using the tiles from OpenStreetMap
-
+	
 	//===> Var init
 
-	// HERE WE GO TWO POSSIBILITIES
-	// Download the map online, directly from the OSM server
-	//var tileUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
+	// Fetch tiles
+	if(CONFIG_tile_source == 'local')
+		var tileUrl = CONFIG_tile_local_path;
+	if(CONFIG_tile_source == 'server')
+		var tileUrl = 'http://{s}.tile.osm.org/{z}/{x}/{y}.png';
 
-	// Or use the tiles we've downloaded
-	var tileUrl = 'UPV/{z}/{x}/{y}.png';
-
-
+	// Set attrib (always !)
 	var attrib = 'Map data © OpenStreetMap contributors'; 
 
 	//===> Map loading
@@ -44,6 +74,14 @@ function mapInit() {
 			});
 	}).addTo(map);
 
+	L.easyButton('glyphicon glyphicon-cog', function(btn, map){
+		// TODO : add the possibility to modify params on the run
+	}).addTo(map);
+
+	L.easyButton('glyphicon glyphicon-refresh', function(btn, map){
+		window.location.reload();
+	}).addTo(map);
+
 	markerFinish.addTo(map).setOpacity(0)
 
 	return map;
@@ -58,16 +96,17 @@ var bounds;
 var currentPosition = {latitude : 0, longitude : 0};
 var startPoint;
 var endPoint;
-var markerPosition = L.marker([39,0]);
+var markerPosition = L.marker([0,0]);
 var markerFinish = L.marker([0,0]);
 var zoomLevel = 16;
 var routeControl;
 var loadedMap = false;
 var i = 0;
+var listenerGPS;
 
 //===> ROS connexion
 var ros = new ROSLIB.Ros({
-	url : 'ws://localhost:9090'
+	url : 'ws://'+ CONFIG_ROS_server_URI +':9090'
 });
 
 swal({
@@ -85,14 +124,13 @@ ros.on('connection', function() {
 		title: "Waiting...",
 		text: "The navigation module can't work without the GPS. Launch the GPS and the module will start automatically.",
 		type: "info",
-		confirmButtonText: "Ok",
+		confirmButtonText: "Reload",
 		closeOnConfirm: false,
-		showLoaderOnConfirm: true,
 		allowOutsideClick: false,
 		allowEscapeKey: false
 		},
 		function(){
-			setTimeout(function(){}, 2000);
+			window.location.reload();
 	});
 });
 
@@ -128,8 +166,7 @@ ros.on('close', function() {
 	});
 });
 
-
-//===> Init the parameters from ROS Params
+//===> Init the routing parameters
 var paramStartLat = new ROSLIB.Param({
 	ros : ros,
 	name : '/routing_machine/start/latitude'
@@ -156,14 +193,6 @@ paramStartLon.set(0);
 paramEndLat.set(0);
 paramEndLon.set(0);
 paramEndGoTo.set(false);
-
-//===> Set the GPS listener, that will move the marker while the car is moving
-var listenerGPS = new ROSLIB.Topic({
-	ros : ros,
-	name : '/gps',
-	messageType : 'sensor_msgs/NavSatFix'
-});
-
 
 //===> Init the map and the click listener
 
@@ -212,38 +241,56 @@ map.on('click', function(e) {
 	}
 });
 
+//===> Set the GPS listener
 
-//===> Set the callback function when a message from /gps is received
+//  => Create param with initial value
+var paramTopicNameValue = CONFIG_default_gps_topic_name;
 
-listenerGPS.subscribe(function(message) {
-	// We have to wait for the GPS before showing the map, because we don't know where we are
-	var lat = message.latitude;
-	var lon = message.longitude;
+//  => Init the ROS param
+var paramTopicName = new ROSLIB.Param({ros : ros, name : '/panel/gps_topic'});
 
-	if(loadedMap == false) 
-	{
-		swal.close();
-		// Center the map on the car's position
-		map.setView([lat, lon], zoomLevel);
-		// Add the marker on the map
-		markerPosition.addTo(map);
-		// Set the flag to true, so we don't have to load the map again
-		loadedMap = true;
-	}
+//  => Set the value
+paramTopicName.get(function(value) { 
+	// If the param isn't created yet, we keep the default value
+	if(value != null) 
+		paramTopicNameValue = value; 
+	
 
-	// Refresh the global variable with the position
-	currentPosition.latitude = lat;
-	currentPosition.longitude = lon;
+	// Set the listener informations
+	listenerGPS = new ROSLIB.Topic({
+	ros : ros,
+	name : paramTopicNameValue,
+	messageType : 'sensor_msgs/NavSatFix'
+	});
 
-	if(i%20 == 0) // No need to move the marker everytime
-	{
+	// Set the callback function when a message from /gps is received
+
+	listenerGPS.subscribe(function(message) {
+		// We have to wait for the GPS before showing the map, because we don't know where we are
+		var lat = message.latitude;
+		var lon = message.longitude;
+
+		if(loadedMap == false) 
+		{
+			swal.close();
+			// Center the map on the car's position
+			map.setView([lat, lon], zoomLevel);
+			// Add the marker on the map
+			markerPosition.addTo(map);
+			// Set the flag to true, so we don't have to load the map again
+			loadedMap = true;
+		}
+
+		// Refresh the global variable with the position
+		currentPosition.latitude = lat;
+		currentPosition.longitude = lon;
 		// Refresh the position of the marker on the map
 		markerPosition.setLatLng([lat, lon]);
 		// If the marker has went out of the map, we move the map
 		bounds = map.getBounds();
 		if(!bounds.contains([lat, lon]))
 			map.setView([lat, lon], zoomLevel);
-	}
-	
-	i++;
+
+	});
 });
+
