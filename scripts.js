@@ -18,6 +18,9 @@
 // The name of the GPS publisher name by default
 var CONFIG_default_gps_topic_name = '/gps';
 
+// The number of cycles between every marker position reload
+var CONFIG_cycles_number = 20;
+
 // We can download the map online on OSM server, but
 // it won't work if the car isn't connected to the internet.
 // If you downloaded tiles and put it in the car, then you can
@@ -29,7 +32,7 @@ var CONFIG_tile_source = 'local';
 var CONFIG_tile_local_path = 'UPV/{z}/{x}/{y}.png';
 
 // Network address to ROS server (it can be localhost or an IP)
-var CONFIG_ROS_server_URI = 'localhost';
+var CONFIG_ROS_server_URI = '192.168.0.200';
 
 
 // ============================= FUNCTIONS
@@ -249,11 +252,15 @@ var paramTopicNameValue = CONFIG_default_gps_topic_name;
 //  => Init the ROS param
 var paramTopicName = new ROSLIB.Param({ros : ros, name : '/panel/gps_topic'});
 
+
+
 //  => Set the value
 paramTopicName.get(function(value) { 
 	// If the param isn't created yet, we keep the default value
 	if(value != null) 
 		paramTopicNameValue = value; 
+	else
+		paramTopicName.set(paramTopicNameValue);
 	
 
 	// Set the listener informations
@@ -264,6 +271,8 @@ paramTopicName.get(function(value) {
 	});
 
 	// Set the callback function when a message from /gps is received
+
+	var i = 0;
 
 	listenerGPS.subscribe(function(message) {
 		// We have to wait for the GPS before showing the map, because we don't know where we are
@@ -281,15 +290,22 @@ paramTopicName.get(function(value) {
 			loadedMap = true;
 		}
 
-		// Refresh the global variable with the position
-		currentPosition.latitude = lat;
-		currentPosition.longitude = lon;
-		// Refresh the position of the marker on the map
-		markerPosition.setLatLng([lat, lon]);
-		// If the marker has went out of the map, we move the map
-		bounds = map.getBounds();
-		if(!bounds.contains([lat, lon]))
-			map.setView([lat, lon], zoomLevel);
+		if(i % CONFIG_cycles_number == 0)
+		{
+			// Refresh the global variable with the position
+			currentPosition.latitude = lat;
+			currentPosition.longitude = lon;
+			// Refresh the position of the marker on the map
+			markerPosition.setLatLng([lat, lon]);
+			// If the marker has went out of the map, we move the map
+			bounds = map.getBounds();
+			if(!bounds.contains([lat, lon]))
+				map.setView([lat, lon], zoomLevel);
+
+			console.log("bm");
+		}
+
+		i++;
 
 	});
 });
