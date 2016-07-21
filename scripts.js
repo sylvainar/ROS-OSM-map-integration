@@ -32,7 +32,7 @@ var CONFIG_tile_source = 'local';
 var CONFIG_tile_local_path = 'UPV/{z}/{x}/{y}.png';
 
 // Network address to ROS server (it can be localhost or an IP)
-var CONFIG_ROS_server_URI = '192.168.0.200';
+var CONFIG_ROS_server_URI = 'localhost';
 
 
 // ============================= FUNCTIONS
