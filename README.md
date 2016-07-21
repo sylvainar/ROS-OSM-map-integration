@@ -1,4 +1,4 @@
-# ROS-OSM-Integration
+# ROS-OSM-map-integration
 
 This application is designed to display an OSM map with Leaflet in a browser, but while being connected to ROS, so it can display the position of the bot using a marker. You can also tap for a destination on the screen, and the app will set the position wanted in the ROS params. To make the routing from your current position to the point you've clicked on, please refer to my ros module [Routing-ROS-Module](https://github.com/sylvainar/Routing-ROS-Module).
 
