@@ -1,5 +1,10 @@
-# Autonomous-Car-GPS-Guiding
-Code for the guiding of the autonomous car, outdoor, with a GPS
+# ROS-OSM-Integration
+
+This application is designed to display an OSM map with Leaflet in a browser, but while being connected to ROS, so it can display the position of the bot using a marker. You can also tap for a destination on the screen, and the app will set the position wanted in the ROS params. To make the routing from your current position to the point you've clicked on, please refer to my ros module [Routing-ROS-Module](https://github.com/sylvainar/Routing-ROS-Module).
+
+![Image](screenshot.png)
+
+*A screenshot and the integration of the module on a car (Lab ai2, UPV)*
 
 ## Installation 
 
