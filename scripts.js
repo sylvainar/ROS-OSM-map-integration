@@ -15,6 +15,12 @@
 
 // ============================= CONFIGURATION
 
+// You can set here some parameters for the launch.
+// In the lab we're using two different GPS, so further in the
+// program, we're going to read rosparam to know what topic
+// we should listen to and what is the number of cycles
+// between each refreshing.
+
 // The name of the GPS publisher name by default
 var CONFIG_default_gps_topic_name = '/gps';
 
@@ -70,11 +76,11 @@ function mapInit() {
 			closeOnConfirm: true,
 			showLoaderOnConfirm: true,
 			allowOutsideClick: false,
-			},
-			function(isConfirm){
-				if (isConfirm) selectionMode = true;
-				else selectionMode = false;
-			});
+		},
+		function(isConfirm){
+			if (isConfirm) selectionMode = true;
+			else selectionMode = false;
+		});
 	}).addTo(map);
 
 	L.easyButton('glyphicon glyphicon-cog', function(btn, map){
@@ -131,9 +137,9 @@ ros.on('connection', function() {
 		closeOnConfirm: false,
 		allowOutsideClick: false,
 		allowEscapeKey: false
-		},
-		function(){
-			window.location.reload();
+	},
+	function(){
+		window.location.reload();
 	});
 });
 
@@ -147,9 +153,9 @@ ros.on('error', function(error) {
 		closeOnConfirm: false,
 		allowOutsideClick: false,
 		allowEscapeKey: false
-		},
-		function(){
-			window.location.reload();
+	},
+	function(){
+		window.location.reload();
 	});
 });
 
@@ -163,9 +169,9 @@ ros.on('close', function() {
 		closeOnConfirm: false,
 		allowOutsideClick: false,
 		allowEscapeKey: false
-		},
-		function(){
-			window.location.reload();
+	},
+	function(){
+		window.location.reload();
 	});
 });
 
@@ -221,10 +227,10 @@ map.on('click', function(e) {
 				showCancelButton: true,
 				closeOnConfirm: true,
 				allowOutsideClick: false,
-				},
-				function(isConfirm){
-					if (isConfirm)
-					{
+			},
+			function(isConfirm){
+				if (isConfirm)
+				{
 						//Logging stuff in the console
 						console.log('Routing Start !');
 						console.log('Start set to : '+ currentPosition.latitude + ' ' + currentPosition.longitude);
@@ -240,7 +246,7 @@ map.on('click', function(e) {
 					{
 						markerFinish.setOpacity(0);
 					}
-			})}, 1000);
+				})}, 1000);
 	}
 });
 
@@ -248,9 +254,11 @@ map.on('click', function(e) {
 
 //  => Create param with initial value
 var paramTopicNameValue = CONFIG_default_gps_topic_name;
+var paramNbCyclesValue = CONFIG_cycles_number;
 
 //  => Init the ROS param
 var paramTopicName = new ROSLIB.Param({ros : ros, name : '/panel/gps_topic'});
+var paramNbCycles = new ROSLIB.Param({ros : ros, name : '/panel/nb_cycles'});
 
 
 
@@ -262,51 +270,59 @@ paramTopicName.get(function(value) {
 	else
 		paramTopicName.set(paramTopicNameValue);
 	
+	paramNbCycles.get(function(value) { 
+		// If the param isn't created yet, we keep the default value
+		if(value != null) 
+			paramNbCyclesValue = value; 
+		else
+		paramNbCycles.set(paramNbCyclesValue);
 
-	// Set the listener informations
-	listenerGPS = new ROSLIB.Topic({
-	ros : ros,
-	name : paramTopicNameValue,
-	messageType : 'sensor_msgs/NavSatFix'
-	});
 
-	// Set the callback function when a message from /gps is received
+		// Set the listener informations
+		listenerGPS = new ROSLIB.Topic({
+			ros : ros,
+			name : paramTopicNameValue,
+			messageType : 'sensor_msgs/NavSatFix'
+		});
 
-	var i = 0;
+		// Set the callback function when a message from /gps is received
 
-	listenerGPS.subscribe(function(message) {
-		// We have to wait for the GPS before showing the map, because we don't know where we are
-		var lat = message.latitude;
-		var lon = message.longitude;
+		var i = 0;
 
-		if(loadedMap == false) 
-		{
-			swal.close();
-			// Center the map on the car's position
-			map.setView([lat, lon], zoomLevel);
-			// Add the marker on the map
-			markerPosition.addTo(map);
-			// Set the flag to true, so we don't have to load the map again
-			loadedMap = true;
-		}
+		listenerGPS.subscribe(function(message) {
+			// We have to wait for the GPS before showing the map, because we don't know where we are
+			var lat = message.latitude;
+			var lon = message.longitude;
 
-		if(i % CONFIG_cycles_number == 0)
-		{
-			// Refresh the global variable with the position
-			currentPosition.latitude = lat;
-			currentPosition.longitude = lon;
-			// Refresh the position of the marker on the map
-			markerPosition.setLatLng([lat, lon]);
-			// If the marker has went out of the map, we move the map
-			bounds = map.getBounds();
-			if(!bounds.contains([lat, lon]))
+			if(loadedMap == false) 
+			{
+				swal.close();
+				// Center the map on the car's position
 				map.setView([lat, lon], zoomLevel);
+				// Add the marker on the map
+				markerPosition.addTo(map);
+				// Set the flag to true, so we don't have to load the map again
+				loadedMap = true;
+			}
 
-			console.log("bm");
-		}
+			if(i % paramNbCyclesValue == 0)
+			{
+				// Refresh the global variable with the position
+				currentPosition.latitude = lat;
+				currentPosition.longitude = lon;
+				// Refresh the position of the marker on the map
+				markerPosition.setLatLng([lat, lon]);
+				// If the marker has went out of the map, we move the map
+				bounds = map.getBounds();
+				if(!bounds.contains([lat, lon]))
+					map.setView([lat, lon], zoomLevel);
 
-		i++;
+				console.log("Update position");
+			}
 
+			i++;
+
+		});
 	});
 });
 
